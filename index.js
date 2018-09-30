@@ -33,7 +33,22 @@ function getMenu(location, mealTime) {
     default:
     loc = "Fulbright Dining Hall"
   }
-  if (loc = "Fulbright Dining Hall") {
+  if (loc == "Brough Dining Hall") {
+    switch (mealTime) {
+      case "breakfast", "bekfist":
+      menu = ["Breakfast", "Culinary Table", "Pastry"];
+      break;
+      case "lunch", "brunch":
+      menu = ["Arkie Grub", "The Wok", "Platinum Grill", "Earthbound"];
+      break;
+      case "dinner", "supper", "dindin":
+      menu = ["Arkie Grub", "The Wok", "Platinum Grill", "Earthbound"];
+      break;
+      default:
+      menu = ["Arkie Grub", "The Wok", "Platinum Grill", "Earthbound"];
+    }
+  }
+  if (loc == "Fulbright Dining Hall") {
     switch (mealTime) {
       case "breakfast", "bekfist":
       menu = ["Breakfast", "Culinary Table", "Pastry"];
@@ -57,7 +72,7 @@ function getMenu(location, mealTime) {
   .wait('.nav-tabs')
   .wait(1000)
   .evaluate((mealTime) => {
-    if (document.querySelector('.nav-tabs').children.length == 3) {
+    if (document.querySelector('.nav-tabs').children.length == 5) { //Is brough
       switch (mealTime) {
         case "breakfast", "bekfist":
         console.log("breakfast");
@@ -75,7 +90,39 @@ function getMenu(location, mealTime) {
         document.querySelector('.nav-tabs').children[0].children[0].click();
       }
     }
-    if (document.querySelector('.nav-tabs').children.length == 2) {
+    if (document.querySelector('.nav-tabs').children.length == 4) { //Is brough on sunday
+      switch (mealTime) {
+        case "lunch", "brunch":
+        console.log("lunch");
+        document.querySelector('.nav-tabs').children[0].children[0].click();
+        break;
+        case "dinner", "supper", "dindin":
+        console.log("dinner");
+        document.querySelector('.nav-tabs').children[1].children[0].click();
+        break;
+        default:
+        document.querySelector('.nav-tabs').children[0].children[0].click();
+      }
+    }
+    if (document.querySelector('.nav-tabs').children.length == 3) { //Is fulbright
+      switch (mealTime) {
+        case "breakfast", "bekfist":
+        console.log("breakfast");
+        document.querySelector('.nav-tabs').children[0].children[0].click();
+        break;
+        case "lunch", "brunch":
+        console.log("lunch");
+        document.querySelector('.nav-tabs').children[1].children[0].click();
+        break;
+        case "dinner", "supper", "dindin":
+        console.log("dinner");
+        document.querySelector('.nav-tabs').children[2].children[0].click();
+        break;
+        default:
+        document.querySelector('.nav-tabs').children[0].children[0].click();
+      }
+    }
+    if (document.querySelector('.nav-tabs').children.length == 2) { //Is fulbright on sunday
       switch (mealTime) {
         case "lunch", "brunch":
         console.log("lunch");
@@ -198,6 +245,30 @@ app.post('/', function(req, res) {
           time = 'dindin';
         }
       }
+    if (message.startsWith(".brough")) {
+      loc = 'brough';
+      if (message.includes('breakfast')) {
+        time = 'breakfast';
+      }
+      if (message.includes('bekfist')) {
+        time = 'bekfist';
+      }
+      if (message.includes('lunch')) {
+        time = 'lunch';
+      }
+      if (message.includes('brunch')) {
+        time = 'brunch';
+      }
+      if (message.includes('dinner')) {
+        time = 'dinner';
+      }
+      if (message.includes('supper')) {
+        time = 'supper';
+      }
+      if (message.includes('dindin')) {
+        time = 'dindin';
+      }
+    }
       getMenu(loc, time);
     }
   }
