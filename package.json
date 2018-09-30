@@ -1,0 +1,28 @@
+{
+  "name": "hungrybot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cssom": "^0.3.4",
+    "express": "^4.16.3",
+    "nightmare": "^3.0.1",
+    "phantomjs": "^2.1.7",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacksonward/hungryBot.git"
+  },
+  "author": "Jackson Ward",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacksonward/hungryBot/issues"
+  },
+  "homepage": "https://github.com/jacksonward/hungryBot#readme"
+}
