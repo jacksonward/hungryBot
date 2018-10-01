@@ -72,12 +72,8 @@ function getMenu(location, mealTime) {
   .wait('.nav-tabs')
   .wait(1000)
   .evaluate((mealTime) => {
-    if (document.querySelector('.nav-tabs').children.length == 5) { //Is brough
+    if (document.querySelector('.nav-tabs').children.length >= 4) { //Is brough
       switch (mealTime) {
-        case "breakfast", "bekfist":
-        console.log("breakfast");
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-        break;
         case "lunch", "brunch":
         console.log("lunch");
         document.querySelector('.nav-tabs').children[1].children[0].click();
@@ -85,20 +81,6 @@ function getMenu(location, mealTime) {
         case "dinner", "supper", "dindin":
         console.log("dinner");
         document.querySelector('.nav-tabs').children[2].children[0].click();
-        break;
-        default:
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-      }
-    }
-    if (document.querySelector('.nav-tabs').children.length == 4) { //Is brough on sunday
-      switch (mealTime) {
-        case "lunch", "brunch":
-        console.log("lunch");
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-        break;
-        case "dinner", "supper", "dindin":
-        console.log("dinner");
-        document.querySelector('.nav-tabs').children[1].children[0].click();
         break;
         default:
         document.querySelector('.nav-tabs').children[0].children[0].click();
@@ -122,7 +104,7 @@ function getMenu(location, mealTime) {
         document.querySelector('.nav-tabs').children[0].children[0].click();
       }
     }
-    if (document.querySelector('.nav-tabs').children.length == 2) { //Is fulbright on sunday
+    if (document.querySelector('.nav-tabs').children.length <= 2) { //Is fulbright on sunday
       switch (mealTime) {
         case "lunch", "brunch":
         console.log("lunch");
