@@ -22,7 +22,7 @@ function getMenu(location, mealTime) {
   });
   var loc;
   var menu;
-  var mealTime = mealTime;
+  console.log(mealTime);
   switch (location) {
     case "fulbright":
     loc = "Fulbright Dining Hall";
@@ -35,13 +35,13 @@ function getMenu(location, mealTime) {
   }
   if (loc == "Brough Dining Hall") {
     switch (mealTime) {
-      case "breakfast", "bekfist":
+      case "breakfast":
       menu = ["Breakfast", "Culinary Table", "Pastry"];
       break;
-      case "lunch", "brunch":
+      case "lunch":
       menu = ["Arkie Grub", "The Wok", "Platinum Grill", "Earthbound"];
       break;
-      case "dinner", "supper", "dindin":
+      case "dinner":
       menu = ["Arkie Grub", "The Wok", "Platinum Grill", "Earthbound"];
       break;
       default:
@@ -50,13 +50,13 @@ function getMenu(location, mealTime) {
   }
   if (loc == "Fulbright Dining Hall") {
     switch (mealTime) {
-      case "breakfast", "bekfist":
+      case "breakfast":
       menu = ["Breakfast", "Culinary Table", "Pastry"];
       break;
-      case "lunch", "brunch":
+      case "lunch":
       menu = ["Entree", "Culinary Table"];
       break;
-      case "dinner", "supper", "dindin":
+      case "dinner":
       menu = ["Entree", "Culinary Table"];
       break;
       default:
@@ -72,100 +72,50 @@ function getMenu(location, mealTime) {
   .wait('.nav-tabs')
   .wait(1000)
   .evaluate((mealTime) => {
-    if (document.querySelector('.nav-tabs').children.length >= 4) { //Is brough
-      switch (mealTime) {
-        case "lunch", "brunch":
-        console.log("lunch");
-        document.querySelector('.nav-tabs').children[1].children[0].click();
-        break;
-        case "dinner", "supper", "dindin":
-        console.log("dinner");
-        document.querySelector('.nav-tabs').children[2].children[0].click();
-        break;
-        default:
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-      }
+    var tabs = [];
+    console.log(mealTime)
+    for (i = 0; i < document.querySelector('.nav-tabs').children.length; i++) {
+      tabs.push(document.querySelector('.nav-tabs').children[i]);
     }
-    if (document.querySelector('.nav-tabs').children.length == 3) { //Is fulbright
-      switch (mealTime) {
-        case "breakfast", "bekfist":
-        console.log("breakfast");
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-        break;
-        case "lunch", "brunch":
-        console.log("lunch");
-        document.querySelector('.nav-tabs').children[1].children[0].click();
-        break;
-        case "dinner", "supper", "dindin":
-        console.log("dinner");
-        document.querySelector('.nav-tabs').children[2].children[0].click();
-        break;
-        default:
-        document.querySelector('.nav-tabs').children[0].children[0].click();
+    tabs.forEach(function(tabEl) {
+      if (tabEl.children[0].textContent.toLowerCase() == mealTime) {
+        tabEl.children[0].click();
       }
-    }
-    if (document.querySelector('.nav-tabs').children.length <= 2) { //Is fulbright on sunday
-      switch (mealTime) {
-        case "lunch", "brunch":
-        console.log("lunch");
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-        break;
-        case "dinner", "supper", "dindin":
-        console.log("dinner");
-        document.querySelector('.nav-tabs').children[1].children[0].click();
-        break;
-        default:
-        document.querySelector('.nav-tabs').children[0].children[0].click();
-      }
-    }
+    })
   }, mealTime)
   .wait(3000)
   .evaluate(function(menu) {
-    var categories = document.querySelectorAll('div.category-name');
+    var categories = document.querySelectorAll('.category-name');
     var found1 = false;
     var found2 = false;
     var found3 = false;
     var menuOptions = [];
-    for (i = 0; i < categories.length; i++) {
-      if (found1 == true && found2 == true && found3 == true) {
-        return menuOptions;
-      }
-      if (categories[i].textContent.includes(menu[0])) {
-        console.log("found menu1");
-        if (found1 == false) {
-          //On first instance of breakfast, get all visible menu-items
-          var table = categories[i].nextElementSibling.children[0].children[1];
+    menu.forEach(function(menuItem) {
+      categories.forEach(function(category) {
+        if (category.textContent.includes(menuItem)) {
+          var table = category.nextElementSibling.children[0].children[1];
           var items = table.children.length;
           for (i = 0; i < items; i++) {
-            menuOptions.push(table.children[i].children[0].children[0].children[0].textContent);
-          }
-          found1 = true;
-        }
-      }
-      if (categories[i].textContent.includes(menu[1])) {
-        console.log("found menu2");
-        if (found2 == false) {
-          var table = categories[i].nextElementSibling.children[0].children[1];
-          var items = table.children.length;
-          for (i = 0; i < items; i++) {
-            menuOptions.push(table.children[i].children[0].children[0].children[0].textContent);
-          }
-          found2 = true;
-        }
-      }
-      if (menu[2]) {
-        if (categories[i].textContent.includes(menu[2])) {
-          if (found3 == false) {
-            var table = categories[i].nextElementSibling.children[0].children[1];
-            var items = table.children.length;
-            for (i = 0; i < items; i++) {
-              menuOptions.push(table.children[i].children[0].children[0].children[0].textContent);
+            menuText = table.children[i].children[0].children[0].children[0].textContent;
+            if (!(menuOptions.includes(menuText))) {
+              menuOptions.push(menuText);
             }
-            found3 = true;
           }
         }
-      } else { found3 = true; }
-    }
+      })
+    })
+    // categories.forEach(function(category) {
+    //   menu.forEach(function(menuItem) {
+    //     if (category.textContent.includes(menuItem)) {
+    //       var table = category.nextElementSibling.children[0].children[1];
+    //       var items = table.children.length;
+    //       for (i = 0; i < items; i++) {
+    //         menuOptions.push(table.children[i].children[0].children[0].children[0].textContent)
+    //       }
+    //     }
+    //   })
+    // })
+    return menuOptions;
   }, menu)
   .end((menuOptions) => {
     console.log(menu);
