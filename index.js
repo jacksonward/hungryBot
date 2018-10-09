@@ -58,8 +58,13 @@ function initLocalMenus(loc) {
   })
 }
 
-locs.forEach(function(el) {
-  initLocalMenus(el);
+//Store interval for delaying initFunction to not overload live environment
+var initInterval = 10000;
+
+locs.forEach(function(el, index) {
+  setTimeout(function() {
+    initLocalMenus(el);
+  }, index * initInterval);
 })
 
 function getMenu(location, mealTime) {
