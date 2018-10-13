@@ -13,9 +13,10 @@ function capitalizeFirstLetter(string) {
 }
 
 //This section below runs at startup to fetch static menus of on-campus eateries
-var locs = ['Au Bon Pain', 'Where the Wild Greens AR',
+var locs = ['Au Bon Pain', 'Where the Wild Greens AR', 'Slim Chickens', 'Rustic Italian',
 'Sushi with Gusto', 'Melt Lab', 'Pei Wei', 'Chick-Fil-A', 'Einstein Brother\'s Bagels',
-'Peabody Perks', 'Quiznos', 'Rocket Taco', 'Starbucks', 'True Burger'];
+'Peabody Perks', 'Quizno\'s', 'Rocket Taco', 'Starbucks', 'True Burger', 'Flying Burrito',
+'Meal Trades'];
 
 var localMenus = {};
 
@@ -64,6 +65,48 @@ var initInterval = 10000;
 locs.forEach(function(el, index) {
   setTimeout(function() {
     initLocalMenus(el);
+    console.log(el);
+    console.log(localMenus);
+    switch (el) {
+      case "Melt Lab":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Sun-Thr: 6-11", "Any Classic Melt Combo"];
+        break;
+      case "Quizno\'s":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Sun-Sat: 6-9", "4\" Sandwich + Soup/Salad/Chips + Drink", "8\" Sandwich + Drink"];
+        break;
+      case "Rocket Taco":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Every Day: 6-9", "Rocket Taco Combo (3 Tacos, Rice + Beans)", "Nacho Combo + Drink"];
+        break;
+      case "Slim Chickens":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Sun-Thr: 6-10", "Fri & Sat: 6-9", "Chicks Plate, 6 Wing Plate, Sandwich/Salad/Wrap Plate + Drink"];
+        break;
+      case "Where the Wild Greens AR":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Every Day: 6-9", "Any menu entree (steak upgrade available) + Drink"];
+        break;
+      case "Chick-Fil-A":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Mon-Thr: 4-11", "Fri: 4:30-9", "Regular/Spicy/Char-Grilled Chicken Sandwich Combo", "12pc Nugget Combo"];
+        break;
+      case "Pei Wei":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Mon-Thr: 5-11", "Fri: 5-9", "Honey Seared Chicken/Pei Wei Original Chicken + Drink"];
+        break;
+      case "Rustic Italian":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Mon-Thr: 5-11", "Fri: 5-9", "2 Slices of Cheese/Pepperoni + Drink", "Choice of Pasta & Sauce + Drink"];
+        break;
+      case "True Burger":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Mon-Thr: 4:30-11", "Fri: 4:30-9", "Americana Combo + Drink"];
+        break;
+      case "Flying Burrito":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Mon-Thr: 5-11", "Fri: 5-9", "Chicken/Beef Nachos + Drink", "Chicken/Beef Rice Bowl + Drink", "Chicken/Beef Taco Salad + Drink", "2 Chicken/Beef Tacos + Drink"];
+        break;
+      case "Au Bon Pain":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Mon-Fri: 7am-8:30am", "Classic Breakfast Sandwich", "Large Oatmeal + Fruit", "Pastry + Fruit", "Egg White + Cheddar Sandwich",
+      "All combos include any size coffee, 20oz Lemonade or Tea; Can upgrade to juice or milk"];
+        break;
+      case "Sushi with Gusto":
+      localMenus[el.toLowerCase()]["meal trades"] = ["Every Day: 6-9", "Chicken Ramen + Drink", "California Roll + Drink", "Veggie Roll + Drink", "Spicy Shrimp Roll + Drink"];
+        break;
+      default:
+    }
   }, index * initInterval);
 })
 
@@ -178,6 +221,12 @@ function getMenu(location, mealTime) {
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//Catches for common misspellings
+var cfaCatches = ['chickfila', 'chick fil a'];
+var qCatches = ['quiznos'];
+var wgCatches = ['wtwga', 'where the wild greens are', 'wild greens'];
+var abpCatches = ['aubonpain', 'aubon pain', 'au bonpain'];
+
 app.post('/', function(req, res) {
   var sender = req.body.name;
   var message = (req.body.text).toLowerCase();
@@ -235,6 +284,27 @@ app.post('/', function(req, res) {
       }
       getMenu(loc, time);
     } else {
+      //Catch common misspellings
+      cfaCatches.forEach(misspelling => {
+        if (message.startsWith("." + misspelling)) {
+          message = message.replace(misspelling, "chick-fil-a");
+        }
+      })
+      qCatches.forEach(misspelling => {
+        if (message.startsWith("." + misspelling)) {
+          message = message.replace(misspelling, "quizno\'s");
+        }
+      })
+      wgCatches.forEach(misspelling => {
+        if (message.startsWith("." + misspelling)) {
+          message = message.replace(misspelling, "where the wild greens ar");
+        }
+      })
+      abpCatches.forEach(misspelling => {
+        if (message.startsWith("." + misspelling)) {
+          message = message.replace(misspelling, "au bon pain");
+        }
+      })
       locs.forEach(function(el) {
         if (message.startsWith('.' + el.toLowerCase())) {
           var foundKey = false;
